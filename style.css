@@ -1,5 +1,5 @@
 body {
-  font-family: Arial, montserrat;
+  font-family: Arial, sans-serif;
   margin: 20px;
 }
 
@@ -8,8 +8,9 @@ h1 {
 }
 
 #map {
-  height: 500px;
+  height: 500px;      /* This is critical! */
   width: 100%;
   margin-top: 20px;
   border: 1px solid #ccc;
 }
+
