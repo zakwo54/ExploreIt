@@ -4,16 +4,29 @@ body {
 }
 
 h1 {
-  margin: 0;
+  text-align: center;
+  margin: 20px 0;
+}
+
+#filters {
   padding: 10px;
+  text-align: center;
+  background: #f4f4f4;
+}
+
+#filters label {
+  margin-right: 15px;
 }
 
 #map {
-  height: 90vh; /* ensures map is visible */
+  height: 70vh;
   width: 100%;
 }
 
+#recommendations {
+  padding: 10px 20px;
 }
+
 
 
 
