@@ -1,0 +1,32 @@
+[
+  {
+    "name": "United States",
+    "iso": "USA",
+    "lat": 39.8283,
+    "lon": -98.5795
+  },
+  {
+    "name": "Canada",
+    "iso": "CAN",
+    "lat": 56.1304,
+    "lon": -106.3468
+  },
+  {
+    "name": "France",
+    "iso": "FRA",
+    "lat": 46.2276,
+    "lon": 2.2137
+  },
+  {
+    "name": "Brazil",
+    "iso": "BRA",
+    "lat": -14.2350,
+    "lon": -51.9253
+  },
+  {
+    "name": "Australia",
+    "iso": "AUS",
+    "lat": -25.2744,
+    "lon": 133.7751
+  }
+]
