@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Travel Map</title>
+  <title>Travel Recommender</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <link rel="stylesheet" href="style.css">
@@ -10,15 +10,44 @@
 </head>
 <body>
 
-  <h1>Travel Map Test</h1>
+  <h1>Find Your Ideal Travel Destination</h1>
+
+  <div id="filters">
+    <label>
+      Month:
+      <select id="month">
+        <option value="Jan">January</option>
+        <option value="Mar">March</option>
+        <option value="Jul">July</option>
+      </select>
+    </label>
+
+    <label>
+      Desired Climate:
+      <select id="climate">
+        <option value="hot">Hot</option>
+        <option value="mild">Mild</option>
+        <option value="cold">Cold</option>
+      </select>
+    </label>
+
+    <button id="applyFilters">Find</button>
+  </div>
 
   <div id="map"></div>
 
-  <!-- Leaflet JS -->
+  <div id="recommendations">
+    <h2>Main Recommendation:</h2>
+    <p id="mainRecommendation">None selected</p>
+    <h3>Alternative Destinations:</h3>
+    <ul id="alternatives"></ul>
+  </div>
+
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script src="main.js"></script>
 </body>
 </html>
+
 
 
 
