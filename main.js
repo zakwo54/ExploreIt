@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
     attribution: "&copy; OpenStreetMap contributors"
   }).addTo(map);
 
-  // Departure city marker
+  // Departure marker
   var departureCity = { name: "New York", lat: 40.7128, lon: -74.0060 };
   L.marker([departureCity.lat, departureCity.lon])
     .addTo(map)
@@ -17,16 +17,13 @@ document.addEventListener("DOMContentLoaded", function () {
     .openPopup();
 
   // ----------------------------
-  // Load countries GeoJSON
+  // Load GeoJSON for countries
   // ----------------------------
   var geoLayer;
-  var countriesGeo;
-
   fetch("data/countries.geojson")
     .then(res => res.json())
-    .then(data => {
-      countriesGeo = data;
-      geoLayer = L.geoJSON(countriesGeo, {
+    .then(geoData => {
+      geoLayer = L.geoJSON(geoData, {
         style: defaultStyle,
         onEachFeature: function(feature, layer) {
           layer.bindPopup(feature.properties.name);
@@ -35,9 +32,6 @@ document.addEventListener("DOMContentLoaded", function () {
     })
     .catch(err => console.error("Failed to load countries.geojson", err));
 
-  // ----------------------------
-  // Default country style
-  // ----------------------------
   function defaultStyle(feature) {
     return {
       fillColor: "#bdc3c7",
@@ -48,18 +42,21 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // ----------------------------
-  // Apply filters function
+  // Apply filters and update map
   // ----------------------------
-  function applyFilters(month, climate) {
+  function applyFilters() {
+    var month = document.getElementById("month").value;
+    var climate = document.getElementById("climate").value;
+
     fetch("data/country_temperatures.json")
       .then(res => res.json())
       .then(countries => {
 
-        // Determine matching countries
+        // Filter based on thresholds
         var matching = countries.filter(c => {
           var temp = c.temperatures[month];
           if (climate === "hot") return temp >= 20;
-          if (climate === "mild") return temp >= 10 && temp <= 20;
+          if (climate === "mild") return temp >= 10 && temp < 20;
           if (climate === "cold") return temp < 10;
         });
 
@@ -79,17 +76,15 @@ document.addEventListener("DOMContentLoaded", function () {
         var mainRec = matching[0] || null;
         document.getElementById("mainRecommendation").innerText = mainRec ? mainRec.name : "None";
 
-        // Update alternatives
-        var alternatives = matching.slice(1, 4);
         var altList = document.getElementById("alternatives");
         altList.innerHTML = "";
-        alternatives.forEach(c => {
+        matching.slice(1, 4).forEach(c => {
           var li = document.createElement("li");
           li.innerText = c.name;
           altList.appendChild(li);
         });
 
-        // Zoom to main recommendation if exists
+        // Zoom to main recommendation
         if (mainRec && mainRec.cities && mainRec.cities.length > 0) {
           var city = mainRec.cities[0];
           map.setView([city.lat, city.lon], 5);
@@ -99,16 +94,10 @@ document.addEventListener("DOMContentLoaded", function () {
       .catch(err => console.error("Failed to load country_temperatures.json", err));
   }
 
-  // ----------------------------
-  // Event listener for filter button
-  // ----------------------------
-  document.getElementById("applyFilters").addEventListener("click", function() {
-    var month = document.getElementById("month").value;
-    var climate = document.getElementById("climate").value;
-    applyFilters(month, climate);
-  });
+  document.getElementById("applyFilters").addEventListener("click", applyFilters);
 
 });
+
 
 
 
