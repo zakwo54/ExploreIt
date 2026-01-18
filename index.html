@@ -2,28 +2,31 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>My Travel Recommender</title>
-  <meta name="description" content="An interactive tool to find your ideal travel destination.">
+  <title>Travel Recommender</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Link to your CSS -->
   <link rel="stylesheet" href="style.css">
-
-  <!-- Leaflet CSS for the map -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 </head>
 <body>
-  <h1>It works</h1>
-  <p>This site is live on GitHub Pages.</p>
 
-  <!-- Map container -->
+  <h1>Where Should You Travel?</h1>
+
+  <div id="controls">
+    <label>
+      Climate:
+      <select id="climate">
+        <option value="any">Any</option>
+        <option value="warm">Warm</option>
+        <option value="cold">Cold</option>
+      </select>
+    </label>
+  </div>
+
   <div id="map"></div>
 
-  <!-- Leaflet JS for the map -->
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-
-  <!-- Your custom JS -->
   <script src="main.js"></script>
+
 </body>
 </html>
-
