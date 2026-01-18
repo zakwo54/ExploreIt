@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
 
   // ----------------------------
-  // 1. Initialize the map
+  // 1. Initialize map
   // ----------------------------
   var map = L.map("map").setView([20, 0], 2);
 
@@ -11,7 +11,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // ----------------------------
   // 2. Departure city marker
-  // (hardcoded for now)
   // ----------------------------
   var departureCity = {
     name: "New York",
@@ -26,42 +25,49 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // ----------------------------
   // 3. Example filter logic
-  // Countries in this list are ALLOWED
-  // All others will be greyed out
+  // Countries NOT in this list are greyed out
   // ----------------------------
   var allowedCountries = ["USA", "FRA"];
 
   // ----------------------------
-  // 4. Load countries dataset
+  // 4. Style function for countries
   // ----------------------------
-  fetch("data/countries.json")
+  function countryStyle(feature) {
+    var iso = feature.properties.ISO_A3;
+    var isAllowed = allowedCountries.includes(iso);
+
+    return {
+      fillColor: isAllowed ? "#2ecc71" : "#bdc3c7",
+      weight: 1,
+      opacity: 1,
+      color: "#555",
+      fillOpacity: isAllowed ? 0.7 : 0.3
+    };
+  }
+
+  // ----------------------------
+  // 5. Load and draw countries
+  // ----------------------------
+  fetch("data/countries.geojson")
     .then(response => response.json())
-    .then(countries => {
+    .then(data => {
 
-      countries.forEach(country => {
-
-        var isAllowed = allowedCountries.includes(country.iso);
-
-        var color = isAllowed ? "green" : "grey";
-
-        L.circleMarker([country.lat, country.lon], {
-          radius: 6,
-          color: color,
-          fillColor: color,
-          fillOpacity: 0.6
-        })
-          .addTo(map)
-          .bindPopup(country.name);
-      });
+      L.geoJSON(data, {
+        style: countryStyle,
+        onEachFeature: function (feature, layer) {
+          layer.bindPopup(feature.properties.ADMIN);
+        }
+      }).addTo(map);
 
     })
     .catch(error => {
-      console.error("Error loading countries.json:", error);
+      console.error("Error loading GeoJSON:", error);
     });
 
-  console.log("Map, countries, and departure marker loaded.");
+  console.log("Country polygons loaded.");
 
 });
+
 
 
 
