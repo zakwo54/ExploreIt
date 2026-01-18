@@ -1,34 +1,31 @@
 document.addEventListener("DOMContentLoaded", function () {
 
+  // ----------------------------
+  // Map setup
+  // ----------------------------
   var map = L.map("map").setView([20, 0], 2);
 
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     attribution: "&copy; OpenStreetMap contributors"
   }).addTo(map);
 
+  // Departure marker
   L.marker([40.7128, -74.0060])
     .addTo(map)
     .bindPopup("Departure: New York");
 
+  // ----------------------------
+  // State
+  // ----------------------------
+  var allowedCountries = [];
   var geoLayer;
-  var countryData;
 
-  function getAllowedCountries() {
-    var climate = document.getElementById("climate").value;
-
-    if (climate === "warm") {
-      return ["BRA", "THA", "IDN", "ESP", "MEX"];
-    }
-
-    if (climate === "cold") {
-      return ["NOR", "SWE", "CAN", "FIN"];
-    }
-
-    return []; // empty = all grey for now
-  }
-
-  function styleCountry(feature) {
-    var allowed = getAllowedCountries().includes(feature.properties.ISO_A3);
+  // ----------------------------
+  // Country style
+  // ----------------------------
+  function countryStyle(feature) {
+    var iso = feature.properties.ISO_A3;
+    var allowed = allowedCountries.length === 0 || allowedCountries.includes(iso);
 
     return {
       fillColor: allowed ? "#2ecc71" : "#bdc3c7",
@@ -38,21 +35,36 @@ document.addEventListener("DOMContentLoaded", function () {
     };
   }
 
+  // ----------------------------
+  // Load GeoJSON
+  // ----------------------------
   fetch("data/countries.geojson")
     .then(res => res.json())
     .then(data => {
-      countryData = data;
-
-      geoLayer = L.geoJSON(countryData, {
-        style: styleCountry,
+      geoLayer = L.geoJSON(data, {
+        style: countryStyle,
         onEachFeature: function (feature, layer) {
           layer.bindPopup(feature.properties.ADMIN);
         }
       }).addTo(map);
     });
 
+  // ----------------------------
+  // Filter logic
+  // ----------------------------
   document.getElementById("climate").addEventListener("change", function () {
-    geoLayer.setStyle(styleCountry);
+    var value = this.value;
+
+    if (value === "warm") {
+      allowedCountries = ["BRA", "THA", "IDN", "ESP", "MEX"];
+    } else if (value === "cold") {
+      allowedCountries = ["NOR", "SWE", "CAN", "FIN"];
+    } else {
+      allowedCountries = []; // empty = allow all
+    }
+
+    geoLayer.setStyle(countryStyle);
   });
 
 });
+
