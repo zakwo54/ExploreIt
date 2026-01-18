@@ -3,10 +3,16 @@ body {
   font-family: Arial, sans-serif;
 }
 
+h1 {
+  margin: 0;
+  padding: 10px;
+}
+
 #map {
-  height: 500px;
+  height: 90vh; /* ensures map is visible */
   width: 100%;
-  background: #ddd;
+}
+
 }
 
 
