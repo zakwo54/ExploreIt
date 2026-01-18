@@ -1,30 +1,68 @@
-document.addEventListener("DOMContentLoaded", function() {
-    // Initialize map
-    var map = L.map('map').setView([20, 0], 2);
+document.addEventListener("DOMContentLoaded", function () {
 
-    // OpenStreetMap tiles
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
+  // ----------------------------
+  // 1. Initialize the map
+  // ----------------------------
+  var map = L.map("map").setView([20, 0], 2);
 
-    console.log("Leaflet map loaded.");
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution: "&copy; OpenStreetMap contributors"
+  }).addTo(map);
 
-    // Load countries dataset
-    fetch('data/countries.json')
-        .then(response => response.json())
-        .then(countries => {
-            countries.forEach(country => {
-                // Add a marker at each country's lat/lon
-                L.circleMarker([country.lat, country.lon], {
-                    radius: 5,
-                    color: 'blue',
-                    fillColor: 'blue',
-                    fillOpacity: 0.5
-                }).addTo(map)
-                .bindPopup(country.name);
-            });
-        });
+  // ----------------------------
+  // 2. Departure city marker
+  // (hardcoded for now)
+  // ----------------------------
+  var departureCity = {
+    name: "New York",
+    lat: 40.7128,
+    lon: -74.0060
+  };
+
+  L.marker([departureCity.lat, departureCity.lon])
+    .addTo(map)
+    .bindPopup("Departure: " + departureCity.name)
+    .openPopup();
+
+  // ----------------------------
+  // 3. Example filter logic
+  // Countries in this list are ALLOWED
+  // All others will be greyed out
+  // ----------------------------
+  var allowedCountries = ["USA", "FRA"];
+
+  // ----------------------------
+  // 4. Load countries dataset
+  // ----------------------------
+  fetch("data/countries.json")
+    .then(response => response.json())
+    .then(countries => {
+
+      countries.forEach(country => {
+
+        var isAllowed = allowedCountries.includes(country.iso);
+
+        var color = isAllowed ? "green" : "grey";
+
+        L.circleMarker([country.lat, country.lon], {
+          radius: 6,
+          color: color,
+          fillColor: color,
+          fillOpacity: 0.6
+        })
+          .addTo(map)
+          .bindPopup(country.name);
+      });
+
+    })
+    .catch(error => {
+      console.error("Error loading countries.json:", error);
+    });
+
+  console.log("Map, countries, and departure marker loaded.");
+
 });
+
 
 
 
