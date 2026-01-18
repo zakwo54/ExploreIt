@@ -7,23 +7,17 @@ document.addEventListener("DOMContentLoaded", function () {
     attribution: "&copy; OpenStreetMap contributors"
   }).addTo(map);
 
-  // Departure city marker
-  var departureCity = {
-    name: "New York",
-    lat: 40.7128,
-    lon: -74.0060
-  };
-
-  L.marker([departureCity.lat, departureCity.lon])
+  // Departure marker
+  L.marker([40.7128, -74.0060])
     .addTo(map)
-    .bindPopup("Departure: " + departureCity.name)
+    .bindPopup("Departure: New York")
     .openPopup();
 
-  // Allowed countries (example)
-  var allowedCountries = ["USA", "FRA"];
+  // Allowed countries
+  var allowedCountries = ["USA", "FRA"]; // should match ISO3166-1-Alpha-3 in full GeoJSON
   var geoLayer;
 
-  // Style function — now referencing correct property
+  // Style function
   function countryStyle(feature) {
     var iso = feature.properties["ISO3166-1-Alpha-3"];
     var allowed = allowedCountries.includes(iso);
@@ -50,6 +44,7 @@ document.addEventListener("DOMContentLoaded", function () {
     .catch(err => console.error("Failed to load countries.geojson", err));
 
 });
+
 
 
 
