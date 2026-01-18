@@ -1,17 +1,13 @@
 document.addEventListener("DOMContentLoaded", function () {
 
-  // ----------------------------
   // Initialize map
-  // ----------------------------
   var map = L.map("map").setView([20, 0], 2);
 
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     attribution: "&copy; OpenStreetMap contributors"
   }).addTo(map);
 
-  // ----------------------------
   // Departure city marker
-  // ----------------------------
   var departureCity = {
     name: "New York",
     lat: 40.7128,
@@ -23,17 +19,13 @@ document.addEventListener("DOMContentLoaded", function () {
     .bindPopup("Departure: " + departureCity.name)
     .openPopup();
 
-  // ----------------------------
   // Allowed countries (example)
-  // ----------------------------
-  var allowedCountries = ["USA", "FRA"]; // initially green
+  var allowedCountries = ["USA", "FRA"];
   var geoLayer;
 
-  // ----------------------------
-  // Style function
-  // ----------------------------
+  // Style function — now referencing correct property
   function countryStyle(feature) {
-    var iso = feature.properties.ISO_A3;
+    var iso = feature.properties["ISO3166-1-Alpha-3"];
     var allowed = allowedCountries.includes(iso);
 
     return {
@@ -44,16 +36,14 @@ document.addEventListener("DOMContentLoaded", function () {
     };
   }
 
-  // ----------------------------
   // Load GeoJSON
-  // ----------------------------
   fetch("data/countries.geojson")
     .then(res => res.json())
     .then(data => {
       geoLayer = L.geoJSON(data, {
         style: countryStyle,
         onEachFeature: function(feature, layer) {
-          layer.bindPopup(feature.properties.ADMIN);
+          layer.bindPopup(feature.properties.name);
         }
       }).addTo(map);
     })
